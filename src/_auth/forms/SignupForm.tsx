@@ -30,7 +30,7 @@ const SignupForm = () => {
   // calling the create user account function as a hook
   const { mutateAsync: createUserAccount, isPending: isCreatingUser } = useCreateUserAccount();
 
-  const { mutateAsync: signInAccount, isPending: isSigningIn } = useSignInAccount();
+  const { mutateAsync: signInAccount, isPending: isSigningInUser } = useSignInAccount();
 
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
@@ -142,7 +142,7 @@ const SignupForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            {isCreatingUser ? (
+            {isCreatingUser || isSigningInUser || isUserLoading ? (
               <div className="flex-center gap-2">
                 <Loader />
               </div>
