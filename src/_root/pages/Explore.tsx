@@ -27,7 +27,7 @@ const SearchResults = ({ isSearchFetching, searchedPosts }: SearchResultProps) =
 
 const Explore = () => {
   const { ref, inView } = useInView();
-  const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
+  const { data: posts, fetchNextPage, hasNextPage, isPending: isPostLoading } = useGetPosts();
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 500);
@@ -52,7 +52,9 @@ const Explore = () => {
 
   return (
     <div className="explore-container">
-      <div className="explore-inner_container">
+      {isPostLoading ? (<Loader />) : (
+        <>
+          <div className="explore-inner_container">
         <h2 className="h3-bold md:h2-bold w-full">Search Posts</h2>
         <div className="flex gap-1 px-4 w-full rounded-lg bg-dark-4">
           <img
@@ -97,9 +99,7 @@ const Explore = () => {
         ) : shouldShowPosts ? (
           <p className="text-light-4 mt-10 text-center w-full">End of posts</p>
         ) : (
-          posts.pages.map((item, index) => (
-            item ? <GridPostList key={`page-${index}`} posts={item.documents} /> : null
-          ))
+          posts.pages.map((item, index) => item && <GridPostList key={`page-${index}`} posts={item.documents} />)
         )}
       </div>
 
@@ -107,6 +107,8 @@ const Explore = () => {
         <div ref={ref} className="mt-10">
           <Loader />
         </div>
+      )}
+        </>
       )}
     </div>
   );
